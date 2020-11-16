@@ -83,11 +83,11 @@ void createRoutes () {
 
     int cnt = 0;
     double length = 0, weight = 0;
-    while (cnt <= 20) {
+    while (cnt < 20) {
         for (int i = 0; i < SAVINGLEN; ++i) {
             // 假设不会出现只送一个城市就超出里程或者载重量的情形
             // case 1: 路径生成初始时刻
-            if (routes[routesSize].route[routes[routesSize].left + 1] == routes[routesSize].route[routes[routesSize].right - 1]) {// head adjacent to tail
+            if (routes[routesSize].route[routes[routesSize].left + 1] == 0 && routes[routesSize].route[routes[routesSize].right - 1] == 0) {// head adjacent to tail
                 if (cnt == 19) {
                     int k = 0;
                     while (citySelected[k] != 0) ++k;
@@ -100,7 +100,7 @@ void createRoutes () {
                 while (i < SAVINGLEN && saving_distance[i].used == 1) ++i;
                 // 防止数组越界，虽然这里不会，但是加上异常处理是一个好习惯
                 if (i >= SAVINGLEN) {
-                    printf("saving overflow\n");
+                    printf("saving overflow 1\n");
                     return;
                 }
                 int c1 = saving_distance[i].l, c2 = saving_distance[i].r;
@@ -109,7 +109,7 @@ void createRoutes () {
                     ++i;
                     while (i < SAVINGLEN && saving_distance[i].used == 1) ++i;
                     if (i >= SAVINGLEN) {
-                        printf("saving overflow\n");
+                        printf("saving overflow 2\n");
                         return;
                     }
                     c1 = saving_distance[i].l;
@@ -188,12 +188,12 @@ void createRoutes () {
 int main () {
     read ();
     createSD ();
-    quickSort (saving_distance, 0, SAVINGLEN);
     for (int i = 0; i < SAVINGLEN; ++i) {
         printf ("%02d%02d: %5lf\n", saving_distance[i].l, saving_distance[i].r, saving_distance[i].value);
     }
     printf ("\n");
 
+    quickSort (saving_distance, 0, SAVINGLEN);
     for (int i = 0; i < SAVINGLEN; ++i) {
         printf ("%02d%02d: %5lf\n", saving_distance[i].l, saving_distance[i].r, saving_distance[i].value);
     }
