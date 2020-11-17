@@ -102,8 +102,7 @@ void createRoutes () {
                 if (i >= SAVINGLEN) {
                     printf("saving overflow 1\n");
                     return;
-                }
-                int c1 = saving_distance[i].l, c2 = saving_distance[i].r;
+                }                int c1 = saving_distance[i].l, c2 = saving_distance[i].r;
                 // 这里, 所剩城市 >= 2, 所以必能跳出 while
                 while (citySelected[c1] != 0 || citySelected[c2] != 0) {
                     ++i;
