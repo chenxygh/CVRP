@@ -100,15 +100,11 @@ void createRoutes () {
 
     int cnt = 0;
     double length = 0, weight = 0;
-    int i = 0, j = 0;
+    int i = 0, j = 1;
     while (cnt < 20) {
-        if (routes[routesSize].route[routes[routesSize].left + 1] == 0 && routes[routesSize].route[routes[routesSize].right - 1] == 0) {// head adjacent to tail
-            weight = length = i = j = 0;
-        }
-        i = j;
-
+        i = routes[routesSize].route[routes[routesSize].right - 1];
         // find active city's minimum neighbor
-        j = 1;
+        // j = 1;
         int city_out = sort_distance[i][j].r;
         while (j < DATASIZE && (city_out == 0 || sort_distance[i][j].used == 1 || citySelected[city_out] == 1)) {
             ++j;
@@ -117,16 +113,16 @@ void createRoutes () {
         if (j >= DATASIZE) {
             routesSize++;
             allLen += length;
-            printf("1: %d\n", cnt);
+            printf("cnt: %d  len: %lf  weight: %lf\n\n", cnt, length, weight);
+            weight = length = 0;
+            j = 1;
             continue;
         }
-        int city_in = sort_distance[i][j].l;
+        int city_in = i;
         double temp_len = length + distance[city_in][city_out] + distance[0][city_out] - distance[0][city_in];
         double temp_weight = weight + weights[city_out];
         if (temp_len > MAXDISTANCE || temp_weight > MAXWEIGHT) {
-            routesSize++;
-            allLen += length;
-            printf("2: %d\n", cnt);
+            sort_distance[i][j].used = 1;
             continue;
         }
         length = temp_len;
@@ -135,9 +131,11 @@ void createRoutes () {
         sort_distance[i][j].used = 1;
         cnt++;
         routes[routesSize].route[routes[routesSize].right++] = city_out;
+        j = 1;
         printf("3: %d\n", cnt);
     }
     routesSize++;
+    allLen += length;
 }
 
 int main () {
@@ -152,12 +150,20 @@ int main () {
 
     createRoutes ();
     printf("routesSize: %d, allLen: %lf\n", routesSize, allLen);
+    double sumLen = 0;
     for (int i = 0; i < routesSize; ++i) {
+        double len = 0;
         for (int j = routes[i].left, k = routes[i].right; j <= k; ++j) {
+            // if (j != routes[i].left) {
+            //     len += distance[routes[i].route[j]][routes[i].route[j - 1]];
+            // }
             printf("%d ", routes[i].route[j]);
         }
+        sumLen += len;
+        // printf("\n%lf\n", len);
         printf("\n");
     }
+    printf("%lf\n", sumLen);
 
     return 0;
 }
